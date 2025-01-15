@@ -7,4 +7,4 @@ while True:
     password = input()
     if password == 'swordfish':
         break
-print('Access Granted')
+print('Access Granted       ')
