@@ -14,7 +14,7 @@ Observations:
 - The program does not check if the provided IP address is valid.
 - The code that would display if the ip is not valid will never execute as in this case the program crashes.
 - The program is written to work with Linux systems only.
-- A commented line is included with the windows equivalent
+- A commented line is included with the Windows equivalent
 """
 
 import subprocess as sp
