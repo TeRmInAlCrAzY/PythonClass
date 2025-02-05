@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 """
 Title: Pinger.py - Exercise program to ping a remote host and check connectivity
 Author: Alan MacDonald
