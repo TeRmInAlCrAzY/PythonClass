@@ -1,0 +1,105 @@
+<meta charset="utf-8" emacsmode="-*- markdown -*-">
+<link rel="stylesheet" href="https://casual-effects.com/markdeep/latest/slate.css?">
+
+Output of the Pinger program
+============================
+
+Linux
+----------------------------
+This is the output of the program under Ubuntu Linux
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+/home/ubuntu/Documents/PythonClass/.venv/bin/python /home/ubuntu/Documents/PythonClass/Topic 3/pinger.py
+Enter an IP address to test connectivity: 8.8.8.8
+Testing connectivity to 8.8.8.8 ...
+The response return code is 0.
+The IP address 8.8.8.8 is alive.
+
+Process finished with exit code 0
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output for an existing IP address]
+
+&nbsp;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+/home/ubuntu/Documents/PythonClass/.venv/bin/python /home/ubuntu/Documents/PythonClass/Topic 3/pinger.py
+Enter an IP address to test connectivity: 99.99.99.99
+Testing connectivity to 99.99.99.99 ...
+Traceback (most recent call last):
+  File "/home/ubuntu/Documents/PythonClass/Topic 3/pinger.py", line 27, in <module>
+    response = sp.run(["ping", "-c", "1", ip_address], stdout=sp.PIPE, check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ping', '-c', '1', '99.99.99.99']' returned non-zero exit status 1.
+
+Process finished with exit code 1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output where the IP address does not exist]
+
+&nbsp;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+/home/ubuntu/Documents/PythonClass/.venv/bin/python /home/ubuntu/Documents/PythonClass/Topic 3/pinger.py
+Enter an IP address to test connectivity: this.is.incorrect
+Testing connectivity to this.is.incorrect ...
+ping: this.is.incorrect: Name or service not known
+Traceback (most recent call last):
+  File "/home/ubuntu/Documents/PythonClass/Topic 3/pinger.py", line 27, in <module>
+    response = sp.run(["ping", "-c", "1", ip_address], stdout=sp.PIPE, check=True)
+  File "/usr/lib/python3.10/subprocess.py", line 526, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ping', '-c', '1', 'this.is.incorrect']' returned non-zero exit status 2.
+
+Process finished with exit code 1
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output where the IP address is invalid]
+
+Windows
+----------------------------
+This is the output of the program under Windows
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+PS C:\Users\me\Programming\Learning Python\LearningPython> & C:/Users/me/AppData/Local/Microsoft/WindowsApps/python3.11.exe "c:/Users/me/Programming/Learning Python/LearningPython/pinger.py"
+Enter an IP address to test connectivity: 8.8.8.8
+Testing connectivity to 8.8.8.8 ...
+The response return code is 0.
+The IP address 8.8.8.8 is alive.
+PS C:\Users\me\Programming\Learning Python\LearningPython>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output for an existing IP address]
+
+&nbsp;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+PS C:\Users\me\Programming\Learning Python\LearningPython> & C:/Users/me/AppData/Local/Microsoft/WindowsApps/python3.11.exe "c:/Users/me/Programming/Learning Python/LearningPython/pinger.py"
+Enter an IP address to test connectivity: 99.99.99.99
+Testing connectivity to 99.99.99.99 ...
+Traceback (most recent call last):
+  File "c:\Users\me\Programming\Learning Python\LearningPython\pinger.py", line 27, in <module>
+    response = sp.run(["ping", "-n", "1", ip_address], stdout=sp.PIPE, check=True)      # Windows version
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ping', '-n', '1', '99.99.99.99']' returned non-zero exit status 1.
+PS C:\Users\me\Programming\Learning Python\LearningPython>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output where the IP address does not exist]
+
+&nbsp;
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~ none
+PS C:\Users\me\Programming\Learning Python\LearningPython> & C:/Users/me/AppData/Local/Microsoft/WindowsApps/python3.11.exe "c:/Users/me/Programming/Learning Python/LearningPython/pinger.py"
+Enter an IP address to test connectivity: this.is.incorrect
+Testing connectivity to this.is.incorrect ...
+Traceback (most recent call last):
+  File "c:\Users\me\Programming\Learning Python\LearningPython\pinger.py", line 27, in <module>
+    response = sp.run(["ping", "-n", "1", ip_address], stdout=sp.PIPE, check=True)      # Windows version
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['ping', '-n', '1', 'this.is.incorrect']' returned non-zero exit status 1.
+PS C:\Users\me\Programming\Learning Python\LearningPython>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[Output where the IP address is invalid]
+
+
+<style class="fallback">body{visibility:hidden}</style>
+<script>markdeepOptions={tocStyle:'long'};</script>
+<!-- Markdeep: -->
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>
