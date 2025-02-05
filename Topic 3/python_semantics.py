@@ -1,6 +1,15 @@
 #!/usr/bin/env python3
 
-""" Python3 Semantics Exercise"""
+"""
+Title: Python3 Semantics Exercise
+Auhor: Alan MacDonald
+Date: 05/02/2025
+
+This is the python Semantics exercise.
+
+Observations:
+- The last instruction to display the directory contents is done twice to show two different layouts
+"""
 
 import os
 
