@@ -3,7 +3,7 @@
 """
 Title: Sequence Types in Python3
 Author: Alan MacDonald
-Date: 05/02/2025
+Date: 13/02/2025
 
 This program demonstrates the use of sequence types in Python3.
 
@@ -52,8 +52,8 @@ print(f"The contents of list_ after converting to lowercase is\n{list_}")
 list2_ = []
 
 # Create a new list, list2_, from the keys in the dictionary dict_
-for key in dict_:
-    list2_.append(key)
+# More pythony, no for loop
+list2_ = list(dict_.keys())
 
 # Show the type of the variable list2_, and it's contents
 print(f"The type of list2_ is {type(list2_)}")
