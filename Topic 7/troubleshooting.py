@@ -50,7 +50,7 @@ def help_():
     """help() function"""
 
     h = (
-        "\n  ~$ {sys.argv[0]}"
+        f"\n  ~$ {sys.argv[0]}"
         + f"\n\n  Program to translate GPA to Irish academic grades"
         + f"\n\n    0 - 4    GPA value between 0 and 4"
         + f"\n    exit     Quit the program"
