@@ -35,7 +35,7 @@ def main():
             attempt_int = int(element)
             print(f"{type(attempt_int)} {attempt_int}")
         except ValueError:
-            print(f"{attempt_int} cannot be converted to an integer")
+            print(f"{element} cannot be converted to an integer")
 
     # Loop with no error checking for faults converting to int
     for element in my_List:
