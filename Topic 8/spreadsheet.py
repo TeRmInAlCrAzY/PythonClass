@@ -36,19 +36,41 @@ def main():
     data = list()
 
     # Read in the source .csv file
-    with open(ORDERS_CSV, mode="r", encoding="utf8") as fh:
-        csv_read = list(csv.reader(fh))
-        header = csv_read[0]
-        data = csv_read[1:]
+    try:
+        fh = open(ORDERS_CSV, mode="r", encoding="utf8")
+    except FileNotFoundError as e:
+        print(f"ERROR: File '{ORDERS_CSV}' not found.")
+        print(f"Logging: {e}")
+        sys.exit(1)
+    except PermissionError as e:
+        print(f"ERROR: Permission denied for file '{ORDERS_CSV}'.")
+        print(f"Logging: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"ERROR: New un-excepted error.h")
+        raise OSError(e)
+
+    csv_read = list(csv.reader(fh))
+    header = csv_read[0]
+    data = csv_read[1:]
 
     # Add on the extra data
-        data.extend([NEW_DATA])
+    data.extend([NEW_DATA])
 
     # Write out the updated data file
-    with open(ORDERS2_CSV, mode="w", encoding="utf8") as fh:
-        csv_write = csv.writer(fh)
-        csv_write.writerow(header)
-        csv_write.writerows(data)
+    try:
+        fh = open(ORDERS2_CSV, mode="w", encoding="utf8")
+    except PermissionError as e:
+        print(f"ERROR: Permission denied for file '{ORDERS_CSV}'.")
+        print(f"Logging: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"ERROR: New un-excepted error.h")
+        raise OSError(e)
+
+    csv_write = csv.writer(fh)
+    csv_write.writerow(header)
+    csv_write.writerows(data)
 
 
 # END function main()
