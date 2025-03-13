@@ -28,6 +28,21 @@ import json
 # ============================================ #
 
 def getCounty(town: str):
+    """
+    Extracts the county name from a given town string, specifically by identifying
+    the occurrence of "Co." within the string, followed by processing subsequent
+    characters to isolate and return the county name. If there is a comma in the
+    county name, it truncates the name up to the first comma to correct the
+    format.
+
+    :param town: A string representing the town name, including the "Co."
+        designation and potentially a trailing comma-separated county name.
+    :type town: str
+
+    :return: The extracted county name, trimmed and corrected of any
+        extraneous trailing commas or additional text.
+    :rtype: str
+    """
     posCounty: int = town.find("Co.")
     county = town[posCounty+4:]
     print(f"Position of Co. in {town} is {posCounty}, county is {county}")
