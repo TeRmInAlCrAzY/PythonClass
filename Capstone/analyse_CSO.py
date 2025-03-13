@@ -23,6 +23,24 @@ from tools import *
 import urllib.request
 import json
 
+# ============================================ #
+# //           getCounty Function           // #
+# ============================================ #
+
+def getCounty(town: str):
+    posCounty: int = town.find("Co.")
+    county = town[posCounty+4:]
+    print(f"Position of Co. in {town} is {posCounty}, county is {county}")
+    if county.find(",") != -1:
+        print("There is a comma in the county name")
+        posComma = county.find(",")
+        print(f"The comma position is {posComma}")
+        print(f"The corrected county name is {county[:posComma]}")
+        county=county[:posComma]
+
+    return county
+
+
 with urllib.request.urlopen("https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en") as url:
     data = json.load(url)
     print(data)
@@ -36,7 +54,34 @@ with open("CSO.json", "r") as infile:
     data = json.load(infile)
 
 #print the type of data
+
+printHeader("Type of Data")
 print(type(data))
 
 # Output the data relating to all towns starting with the letter 'G'
+printHeader("Towns starting with G")
+g_towns = data["dataset"]["dimension"]["C03198V03862"]["category"]["label"]
+print(g_towns)
+
+# Declare a blank list of G towns
+g_towns_list = []
+
+printHeader("G towns noted")
+for town in (g_towns.values()):
+    print(town)
+    if town[4] == "G":
+        print("G Town!")
+        g_towns_list.append(town)
+
+printHeader("G towns list")
+for town in g_towns_list:
+    print(town)
+    county = getCounty(town)
+    print (county)
+
+
+# # For each town, find the 4th character in the string
+# printHeader("4th character in town name")
+# for town in (g_towns.values()):
+#     print(town[3])
 
