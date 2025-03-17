@@ -1,0 +1,28 @@
+<meta charset="utf-8" emacsmode="-*- markdown -*-">
+<link rel="stylesheet" href="https://casual-effects.com/markdeep/latest/slate.css?">
+Parsing JSON File
+=================
+
+1. Read the data from the JSON link
+2. Save the JSON data locally
+3. Import the data to a dictionary in the program
+3.1 we need a dictionary which is the label index 100 -> 130, but backwards, so we can retrieve the index number of a particular town *DONE*
+4. Output all data relating to towns that start with the letter G
+4.1 Build a dictionary of label index : name of town where town starts with G
+4.2 Step through the dictionary, using the label index to point into the data list to retrieve the population etc.
+4.3 Output the data to a CSV file in the current directory
+5. Output all data on towns in counties starting with the letter K
+5.1 Build a dictionary of label index : name of town where county starts with a K
+5.2 Step through the dictionary, using the label index to point into the data list to retrieve the population etc.
+5.3 Output the data to a CSV file in the current directory
+6 Output all data relating to towns starting with the letter N to stdout, nicely formated
+6.1 Build a dictionary of label index : name of town where town starts with N
+6.2 Step through the dictionary, using the label index to point into the data list to retrieve the population etc.
+6.3 Output the data to stdout with pprint and columns
+
+
+
+<style class="fallback">body{visibility:hidden}</style>
+<script>markdeepOptions={tocStyle:'long'};</script>
+<!-- Markdeep: -->
+<script src="https://casual-effects.com/markdeep/latest/markdeep.min.js?" charset="utf-8"></script>
