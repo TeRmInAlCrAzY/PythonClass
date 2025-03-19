@@ -159,7 +159,8 @@ def main():
 
 
     # Step through the gtowns
-    for key, town in gTowns.items()
+    for key, town in gTowns.items():
+
 
 
     #print the type of data
