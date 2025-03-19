@@ -17,8 +17,16 @@ import json
 import logging
 import sys
 
+# ============================================ #
+# //      Global variable declarations      // #
+# ============================================ #
+
 YAML_FILE = "network.yaml"
 JSON_FILE = "network.json"
+
+# -------------------------------------------- #
+# //               Main function            // #
+# -------------------------------------------- #
 
 
 def main():
@@ -26,34 +34,50 @@ def main():
     # Set the logging level to info
     logging.basicConfig(level=logging.WARNING)
 
-
+    # Read in the YAML file with some basic error catching
     print(f"Reading the '{YAML_FILE}' YAML file")
-    fh = open(YAML_FILE, mode="r", encoding="utf8")
+    try:
+        fh = open(YAML_FILE, mode="r", encoding="utf8")
+    except FileNotFoundError:
+        logging.ERROR(f"File '{YAML_FILE}' not found.")
+        sys.exit(1)
+    except Exception as e:
+        logging.ERROR(f"An error occurred while opening '{YAML_FILE}': {e}")
+        sys.exit(1)
+
+    # Read in the YAML file data to variables
     head_ = fh.readline()
     net_list = yaml.safe_load(fh)
     fh.close()
 
-    print(f"ens192: {str(net_list['network']['ethernets']['ens192']['addresses'])[2:-2]}")
-    print(f"ens224: {str(net_list['network']['ethernets']['ens224']['addresses'])[2:-2]}")
+    # Print required output
+    print(
+        f"ens192: "
+        f"{str(net_list['network']['ethernets']['ens192']['addresses'])[2:-2]}"
+    )
+    print(
+        f"ens224: "
+        f"{str(net_list['network']['ethernets']['ens224']['addresses'])[2:-2]}"
+    )
 
-    print(f"Serialising data to'{JSON_FILE}'")
-    fh = open(JSON_FILE, mode="w", encoding="utf8")
+    # Write out the YAML data to a JSON file
+    # Uses some basic error catching
+    print(f"Serialising data to '{JSON_FILE}'")
+    try:
+        fh = open(JSON_FILE, mode="w", encoding="utf8")
+    except PermissionError:
+        logging.warning(
+            f"Permission denied, unable to write to '{JSON_FILE}'.")
+        sys.exit(1)
+    except Exception as e:
+        logging.warning(
+            f"An error occurred while opening '{JSON_FILE}': {e}")
+        sys.exit(1)
+
+    # Write out the JSON file
     json.dump(net_list, fh, indent=4)
-
-    fh = open(YAML_FILE, mode="r", encoding="utf8")
-    data = yaml.full_load(fh)
-    logging.info(f"The type of the data is {type(data)}")
-    logging.info("The contents of the data")
-    logging.info(data)
-    logging.info(f"{data.get('network').get('ethernets').get('ens192').get('addresses')}")
-    mystring=str(data.get('network').get('ethernets').get('ens192').get('addresses'))
-
-
-    logging.info(f"The type of the string is {type(mystring)}")
-    logging.info(f"The string is {mystring}")
-    logging.info(f"The string is {mystring[2:-2]}")
-
     fh.close()
+
 
 # END function main()
 
