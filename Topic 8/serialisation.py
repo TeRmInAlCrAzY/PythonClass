@@ -46,7 +46,6 @@ def main():
         sys.exit(1)
 
     # Read in the YAML file data to variables
-    head_ = fh.readline()
     net_list = yaml.safe_load(fh)
     fh.close()
 
