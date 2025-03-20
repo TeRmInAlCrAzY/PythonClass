@@ -96,23 +96,34 @@ def main():
     # Set the logging level to info
     logging.basicConfig(level=logging.INFO)
 
-    # Pull the JSON data from the suppied url
+    # Pull the JSON data from the supplied URL
     with urllib.request.urlopen(
-        "https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en"
-    ) as url:
+                "https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en"
+        ) as url:
         data = json.load(url)
         logging.info(data)
 
     # Save the data to a json file in the current working directory
     # called CSO.json
-    outfile = open("CSO.json", "w")
-    json.dump(data, outfile)
-    outfile.close()
+    try:
+        outfile = open("CSO.json", "w")
+        json.dump(data, outfile)
+        outfile.close()
+    except IOError as e:
+        logging.error(f"Failed to write to 'CSO.json': {e}")
+        sys.exit(1)
 
     # Import CSO.json to a dictionary
-    infile = open("CSO.json", "r")
-    data = json.load(infile)
-    infile.close()
+    try:
+        infile = open("CSO.json", "r")
+        data = json.load(infile)
+        infile.close()
+    except IOError as e:
+        logging.error(f"Failed to open 'CSO.json': {e}")
+        sys.exit(1)
+    except Exception as e:
+        logging.error(f"Unexpected error while opening 'CSO.json': {e}")
+        sys.exit(1)
 
     # Build a lookup list from $.dataset.dimension.C03198V03862.category.label
     # This will allow us to look up the population data later
@@ -205,7 +216,7 @@ def main():
         )
 
         # logging.info(f"Town: {town} -- Population: {pop_value}")
-        print(
+        logging.info(
             f"{key},{town},{pop_value},"
             f"{males_value},{females_value},"
             f"{ph_occ_value},{ph_unocc_value},"
@@ -228,6 +239,84 @@ def main():
                             quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
     csv_writer.writerows(CSV_Data)
+
+    # Build a list of towns in counties that start with the letter K
+    
+    # Declare a dictionary called kTowns
+    kTowns = {}
+    logging.info("Building dictionary of K towns")
+
+    # Step through the list of towns in allTowns
+    for key, town in allTowns.items():
+        county = getCounty(town)
+        if county[0] == "K":
+            kTowns[key] = town
+
+    logging.info("***Dictionary of K towns")
+    logging.info(kTowns)
+
+    CSV_Data = []
+
+    CSV_Data.append(CSV_HEADER)
+
+    for key, town in kTowns.items():
+        # Clean the data - extra , exists in Town
+        if town.find(",") != -1:
+            logging.info("There is a comma in the name")
+            posComma = town.find(",")
+            logging.info(f"The comma position is {posComma}")
+            logging.info(f"The corrected county name is {town[:posComma]}")
+            town = town[:posComma]
+
+        # Get the pop_value for each town
+        adjusted_key = (int(key) - 1) * 8
+        pop_value = values[adjusted_key]
+        males_value = values[adjusted_key + 1]
+        females_value = values[adjusted_key + 2]
+        ph_occ_value = values[adjusted_key + 3]
+        ph_unocc_value = values[adjusted_key + 4]
+        vac_dwell_value = values[adjusted_key + 5]
+        h_stock_value = values[adjusted_key + 6]
+        vac_rate_value = values[adjusted_key + 7]
+
+        CSV_Data.append(
+            [
+                key,
+                town,
+                pop_value,
+                males_value,
+                females_value,
+                ph_occ_value,
+                ph_unocc_value,
+                vac_dwell_value,
+                h_stock_value,
+                vac_rate_value,
+            ]
+        )
+
+        logging.info(
+            f"{key},{town},{pop_value},"
+            f"{males_value},{females_value},"
+            f"{ph_occ_value},{ph_unocc_value},"
+            f"{vac_dwell_value},{h_stock_value},"
+            f"{vac_rate_value}"
+        )
+
+        # Open the letterK.csv file
+        try:
+            fh = open(LETTERK_CSV, mode="w", encoding="utf8")
+        except PermissionError as e:
+            print(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
+            print(f"Logging: {e}")
+            sys.exit(1)
+        except Exception as e:
+            print(f"ERROR: New un-excepted error.h")
+            raise OSError(e)
+
+        csv_writer = csv.writer(fh, delimiter=",",
+                                quotechar='"',
+                                quoting=csv.QUOTE_MINIMAL)
+        csv_writer.writerows(CSV_Data)
 
     # print the type of data
 
