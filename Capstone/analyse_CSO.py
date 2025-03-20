@@ -143,18 +143,7 @@ def main():
     logging.info(gTowns)
 
     # So we have our list of G towns in a dictionary. We now need to step through the items in the dictionary, extract the index, use
-    # that index to lookup the data in the values list
-
-    # Open the letterG.csv file
-    try:
-        fh = open(LETTERG_CSV, mode="w", encoding="utf8")
-    except PermissionError as e:
-        print(f"ERROR: Permission denied for file '{LETTERG_CSV}'.")
-        print(f"Logging: {e}")
-        sys.exit(1)
-    except Exception as e:
-        print(f"ERROR: New un-excepted error.h")
-        raise OSError(e)
+    # that index to lookup the data in the values list, and append it to CSV_Data
 
     CSV_Data = []
 
@@ -188,6 +177,17 @@ def main():
 
         #logging.info(f"Town: {town} -- Population: {pop_value}")
         print(f"{key},{town},{pop_value},{males_value},{females_value},{ph_occ_value},{ph_unocc_value},{vac_dwell_value},{h_stock_value},{vac_rate_value}")
+
+    # Open the letterG.csv file
+    try:
+        fh = open(LETTERG_CSV, mode="w", encoding="utf8")
+    except PermissionError as e:
+        print(f"ERROR: Permission denied for file '{LETTERG_CSV}'.")
+        print(f"Logging: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"ERROR: New un-excepted error.h")
+        raise OSError(e)
 
     csv_writer = csv.writer(fh, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
     csv_writer.writerows(CSV_Data)
