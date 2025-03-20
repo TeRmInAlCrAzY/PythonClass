@@ -14,6 +14,7 @@ from the following website:
 https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
 
 """
+import csv
 
 # ============================================ #
 # //             Module imports             // #
@@ -133,7 +134,7 @@ def main():
 
     # step through the list of towns in allTowns. print each key and value in allTowns
     for key, town in allTowns.items():
-        print(f"Town: {town}")
+        # print(f"Town: {town}")
         if town[4] == "G":
             # add town to dictionary gTowns with key index
             gTowns[key] = town
@@ -155,13 +156,41 @@ def main():
         print(f"ERROR: New un-excepted error.h")
         raise OSError(e)
 
+    CSV_Data = []
+
     logging.info(CSV_HEADER)
 
+    CSV_Data.append(CSV_HEADER)
 
     # Step through the gtowns
     for key, town in gTowns.items():
+        # Clean the data - extra , exists in Town
+        if town.find(",") != -1:
+            logging.info("There is a comma in the name")
+            posComma = town.find(",")
+            logging.info(f"The comma position is {posComma}")
+            logging.info(f"The corrected county name is {town[:posComma]}")
+            town = town[:posComma]
 
+        # Get the pop_value for each town
+        adjusted_key = (int(key) - 1) * 8
+        pop_value = values[adjusted_key]
+        males_value = values[adjusted_key+1]
+        females_value = values[adjusted_key+2]
+        ph_occ_value = values[adjusted_key+3]
+        ph_unocc_value = values[adjusted_key+4]
+        vac_dwell_value = values[adjusted_key+5]
+        h_stock_value = values[adjusted_key+6]
+        vac_rate_value = values[adjusted_key+7]
 
+        CSV_Data.append(
+            [key, town, pop_value, males_value, females_value, ph_occ_value, ph_unocc_value, vac_dwell_value, h_stock_value, vac_rate_value])
+
+        #logging.info(f"Town: {town} -- Population: {pop_value}")
+        print(f"{key},{town},{pop_value},{males_value},{females_value},{ph_occ_value},{ph_unocc_value},{vac_dwell_value},{h_stock_value},{vac_rate_value}")
+
+    csv_writer = csv.writer(fh, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    csv_writer.writerows(CSV_Data)
 
     #print the type of data
 
