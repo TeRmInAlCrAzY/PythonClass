@@ -302,21 +302,21 @@ def main():
             f"{vac_rate_value}"
         )
 
-        # Open the letterK.csv file
-        try:
-            fh = open(LETTERK_CSV, mode="w", encoding="utf8")
-        except PermissionError as e:
-            print(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
-            print(f"Logging: {e}")
-            sys.exit(1)
-        except Exception as e:
-            print(f"ERROR: New un-excepted error.h")
-            raise OSError(e)
+    # Open the letterK.csv file
+    try:
+        fh = open(LETTERK_CSV, mode="w", encoding="utf8")
+    except PermissionError as e:
+        print(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
+        print(f"Logging: {e}")
+        sys.exit(1)
+    except Exception as e:
+        print(f"ERROR: New un-excepted error.h")
+        raise OSError(e)
 
-        csv_writer = csv.writer(fh, delimiter=",",
+    csv_writer = csv.writer(fh, delimiter=",",
                                 quotechar='"',
                                 quoting=csv.QUOTE_MINIMAL)
-        csv_writer.writerows(CSV_Data)
+    csv_writer.writerows(CSV_Data)
 
     # print the type of data
 
