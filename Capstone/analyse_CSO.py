@@ -24,6 +24,7 @@ import urllib.request
 import json
 import sys
 import logging
+from tabulate import tabulate
 
 # ============================================ #
 # //      Global variable declarations      // #
@@ -340,7 +341,7 @@ def main():
 
     PRINT_Data = []
 
-    PRINT_Data.append(CSV_HEADER)
+    # PRINT_Data.append(CSV_HEADER)
 
     for key, town in nTowns.items():
         # Clean the data - extra , exists in Town
@@ -366,20 +367,36 @@ def main():
             [
                 key,
                 town,
-                pop_value,
-                males_value,
-                females_value,
-                ph_occ_value,
-                ph_unocc_value,
-                vac_dwell_value,
-                h_stock_value,
+                "{:,}".format(int(pop_value)),
+                "{:,}".format(int(males_value)),
+                "{:,}".format(int(females_value)),
+                "{:,}".format(int(ph_occ_value)),
+                "{:,}".format(int(ph_unocc_value)),
+                "{:,}".format(int(vac_dwell_value)),
+                "{:,}".format(int(h_stock_value)),
                 vac_rate_value,
             ]
         )
 
     # Now we need to print it out in a pretty fashion with columns
-    for row in PRINT_Data:
-        print("{: <10} {: <40} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15}".format(*row))
+    # for row in PRINT_Data:
+    #     print("{: <10} {: <40} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15}".format(*row))
+
+    printHeader = [
+    "Code",
+    "Name",
+    "Population",
+    "Males",
+    "Females",
+    "Occupied",
+    "Unoccupied",
+    "Dwellings",
+    "Stock",
+    "Vacancy %",
+]
+    print(tabulate(PRINT_Data, printHeader, tablefmt="rounded_outline",
+                   colalign=("right","left","right", "right", "right",
+                             "right", "right", "right", "right", "right")))
 
 # END function main()
 
