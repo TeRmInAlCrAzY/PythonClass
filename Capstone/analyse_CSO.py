@@ -91,11 +91,24 @@ def townLetter(theTowns, letter):
     for key, town in theTowns.items():
         if town[4] == letter:
             townList[key] = town
+
     return townList
+
+def countyLetter(theTowns, letter):
+
+    townlist = {}
+
+    for key, town in theTowns.items():
+        county = getCounty(town)
+        if county[0] == letter:
+            townlist[key] = town
+
+    return townlist
 
 def buildData(smallTownList, valuesList):
     townData = []
 
+    print(f"The smallTownList is {smallTownList}")
     for key, town in smallTownList.items():
         if town.find(",") != -1:
             posComma = town.find(",")
@@ -127,7 +140,7 @@ def buildData(smallTownList, valuesList):
             ]
         )
 
-        return townData
+    return townData
 
 # -------------------------------------------- #
 # //               Main function            // #
@@ -198,75 +211,16 @@ def main():
     logging.info(allTowns)
 
     # EXTRACT THE DATA FOR TOWNS STARTING WITH G
-    # Declare a dictionary called gTowns
-    gTowns = {}
     logging.info("Building dictionary of G towns")
 
-    # step through the list of towns in allTowns
-    for key, town in allTowns.items():
-        # print(f"Town: {town}")
-        if town[4] == "G":
-            # add town to dictionary gTowns with key index
-            gTowns[key] = town
+    gTowns = townLetter(allTowns, "G")
 
     logging.info("***Dictionary of G towns")
     logging.info(gTowns)
 
-    # So we have our list of G towns in a dictionary.
-    # We now need to step through the items in the dictionary,
-    # extract the index, use that index to lookup the data in
-    # the values list, and append it to CSV_Data
-
-    CSV_Data = []
-
-    logging.info(CSV_HEADER)
-
-    CSV_Data.append(CSV_HEADER)
-
-    # Step through the gtowns
-    for key, town in gTowns.items():
-        # Clean the data - extra , exists in Town
-        if town.find(",") != -1:
-            logging.info("There is a comma in the name")
-            posComma = town.find(",")
-            logging.info(f"The comma position is {posComma}")
-            logging.info(f"The corrected county name is {town[:posComma]}")
-            town = town[:posComma]
-
-        # Get the pop_value for each town
-        adjusted_key = (int(key) - 1) * 8
-        pop_value = values[adjusted_key]
-        males_value = values[adjusted_key + 1]
-        females_value = values[adjusted_key + 2]
-        ph_occ_value = values[adjusted_key + 3]
-        ph_unocc_value = values[adjusted_key + 4]
-        vac_dwell_value = values[adjusted_key + 5]
-        h_stock_value = values[adjusted_key + 6]
-        vac_rate_value = values[adjusted_key + 7]
-
-        CSV_Data.append(
-            [
-                key,
-                town,
-                pop_value,
-                males_value,
-                females_value,
-                ph_occ_value,
-                ph_unocc_value,
-                vac_dwell_value,
-                h_stock_value,
-                vac_rate_value,
-            ]
-        )
-
-        # logging.info(f"Town: {town} -- Population: {pop_value}")
-        logging.info(
-            f"{key},{town},{pop_value},"
-            f"{males_value},{females_value},"
-            f"{ph_occ_value},{ph_unocc_value},"
-            f"{vac_dwell_value},{h_stock_value},"
-            f"{vac_rate_value}"
-        )
+    outputCSVData = []
+    outputCSVData.append(CSV_HEADER)
+    outputCSVData = outputCSVData + buildData(gTowns, values)
 
     # Open the letterG.csv file
     try:
@@ -283,7 +237,7 @@ def main():
                             delimiter=",",
                             quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(CSV_Data)
+    csv_writer.writerows(outputCSVData)
 
     fh.close()
 
@@ -294,61 +248,20 @@ def main():
     kTowns = {}
     logging.info("Building dictionary of K towns")
 
+    kTowns = countyLetter(allTowns, "K")
+
     # Step through the list of towns in allTowns
-    for key, town in allTowns.items():
-        county = getCounty(town)
-        if county[0] == "K":
-            kTowns[key] = town
+    # for key, town in allTowns.items():
+    #     county = getCounty(town)
+    #     if county[0] == "K":
+    #         kTowns[key] = town
 
     logging.info("***Dictionary of K towns")
     logging.info(kTowns)
 
-    CSV_Data = []
-
-    CSV_Data.append(CSV_HEADER)
-
-    for key, town in kTowns.items():
-        # Clean the data - extra , exists in Town
-        if town.find(",") != -1:
-            logging.info("There is a comma in the name")
-            posComma = town.find(",")
-            logging.info(f"The comma position is {posComma}")
-            logging.info(f"The corrected county name is {town[:posComma]}")
-            town = town[:posComma]
-
-        # Get the pop_value for each town
-        adjusted_key = (int(key) - 1) * 8
-        pop_value = values[adjusted_key]
-        males_value = values[adjusted_key + 1]
-        females_value = values[adjusted_key + 2]
-        ph_occ_value = values[adjusted_key + 3]
-        ph_unocc_value = values[adjusted_key + 4]
-        vac_dwell_value = values[adjusted_key + 5]
-        h_stock_value = values[adjusted_key + 6]
-        vac_rate_value = values[adjusted_key + 7]
-
-        CSV_Data.append(
-            [
-                key,
-                town,
-                pop_value,
-                males_value,
-                females_value,
-                ph_occ_value,
-                ph_unocc_value,
-                vac_dwell_value,
-                h_stock_value,
-                vac_rate_value,
-            ]
-        )
-
-        logging.info(
-            f"{key},{town},{pop_value},"
-            f"{males_value},{females_value},"
-            f"{ph_occ_value},{ph_unocc_value},"
-            f"{vac_dwell_value},{h_stock_value},"
-            f"{vac_rate_value}"
-        )
+    outputCSVData = []
+    outputCSVData.append(CSV_HEADER)
+    outputCSVData = outputCSVData + buildData(kTowns, values)
 
     # Open the letterK.csv file
     try:
@@ -365,7 +278,7 @@ def main():
                             delimiter=",",
                             quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(CSV_Data)
+    csv_writer.writerows(outputCSVData)
 
     fh.close()
 
@@ -374,11 +287,7 @@ def main():
     nTowns = {}
     logging.info("Building dictionary of N towns")
 
-    # Step through the list of towns in allTowns
-    for key, town in allTowns.items():
-        if town[4] == "N":
-            # add town to dictionary nTowns with key index
-            nTowns[key] = town
+    nTowns = townLetter(allTowns, "N")
 
     logging.info("***Dictionary of N towns")
     logging.info(nTowns)
