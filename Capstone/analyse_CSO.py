@@ -84,6 +84,50 @@ def getTown(town: str):
     town = town[3:posCounty - 1]
     return town
 
+def townLetter(theTowns, letter):
+
+    townList = {}
+
+    for key, town in theTowns.items():
+        if town[4] == letter:
+            townList[key] = town
+    return townList
+
+def buildData(smallTownList, valuesList):
+    townData = []
+
+    for key, town in smallTownList.items():
+        if town.find(",") != -1:
+            posComma = town.find(",")
+            town = town[:posComma]
+
+        # Get the pop_value for each town
+        adjusted_key = (int(key) - 1) * 8
+        pop_value = valuesList[adjusted_key]
+        males_value = valuesList[adjusted_key + 1]
+        females_value = valuesList[adjusted_key + 2]
+        ph_occ_value = valuesList[adjusted_key + 3]
+        ph_unocc_value = valuesList[adjusted_key + 4]
+        vac_dwell_value = valuesList[adjusted_key + 5]
+        h_stock_value = valuesList[adjusted_key + 6]
+        vac_rate_value = valuesList[adjusted_key + 7]
+
+        townData.append(
+            [
+                key,
+                town,
+                pop_value,
+                males_value,
+                females_value,
+                ph_occ_value,
+                ph_unocc_value,
+                vac_dwell_value,
+                h_stock_value,
+                vac_rate_value,
+            ]
+        )
+
+        return townData
 
 # -------------------------------------------- #
 # //               Main function            // #
