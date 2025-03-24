@@ -14,13 +14,12 @@ from the following website:
 https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
 
 """
-import csv
 
 # ============================================ #
 # //             Module imports             // #
 # ============================================ #
 
-from tools import *
+import csv
 import urllib.request
 import json
 import sys
@@ -65,8 +64,7 @@ def getCounty(town: str):
         logging.info("There is a comma in the county name")
         posComma = county.find(",")
         logging.info(f"The comma position is {posComma}")
-        logging.info(f"The corrected county name is "
-                     f"{county[:posComma]}")
+        logging.info(f"The corrected county name is " f"{county[:posComma]}")
         county = county[:posComma]
 
     return county
@@ -94,12 +92,12 @@ def getTown(town: str):
 def main():
     """This is the main() function"""
     # Set the logging level to info
-    logging.basicConfig(level=logging.INFO)
+    logging.basicConfig(level=logging.WARNING)
 
     # Pull the JSON data from the supplied URL
     with urllib.request.urlopen(
-                "https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en"
-        ) as url:
+        "https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en"
+    ) as url:
         data = json.load(url)
         logging.info(data)
 
@@ -154,6 +152,7 @@ def main():
     logging.info(type(allTowns))
     logging.info(allTowns)
 
+    # EXTRACT THE DATA FOR TOWNS STARTING WITH G
     # Declare a dictionary called gTowns
     gTowns = {}
     logging.info("Building dictionary of G towns")
@@ -235,13 +234,17 @@ def main():
         print(f"ERROR: New un-excepted error.h")
         raise OSError(e)
 
-    csv_writer = csv.writer(fh, delimiter=",",
+    csv_writer = csv.writer(fh,
+                            delimiter=",",
                             quotechar='"',
                             quoting=csv.QUOTE_MINIMAL)
     csv_writer.writerows(CSV_Data)
 
+    fh.close()
+
+    # EXTRACT THE DATA FOR TOWNS IN COUNTIES STARTING WITH K
     # Build a list of towns in counties that start with the letter K
-    
+
     # Declare a dictionary called kTowns
     kTowns = {}
     logging.info("Building dictionary of K towns")
@@ -313,41 +316,70 @@ def main():
         print(f"ERROR: New un-excepted error.h")
         raise OSError(e)
 
-    csv_writer = csv.writer(fh, delimiter=",",
-                                quotechar='"',
-                                quoting=csv.QUOTE_MINIMAL)
+    csv_writer = csv.writer(fh,
+                            delimiter=",",
+                            quotechar='"',
+                            quoting=csv.QUOTE_MINIMAL)
     csv_writer.writerows(CSV_Data)
 
-    # print the type of data
+    fh.close()
 
-    # logging.info(type(data))
+    # EXTRACT THE DATA FOR TOWNS STARTING WITH N
+    # Declare a dictionary called nTowns
+    nTowns = {}
+    logging.info("Building dictionary of N towns")
 
-    # # Output the data relating to all towns starting with the letter 'G'
-    # g_towns_list = [town for town in allTowns.values() if town[4] == 'G']
-    # logging.info("Towns starting with G:")
-    # logging.info(g_towns_list)
-    #
-    # # Declare a blank list of G towns
-    # g_towns_list = []
-    #
-    # logging.info("G towns noted")
-    # for town in (g_towns.values()):
-    #     logging.info(town)
-    #     if town[4] == "G":
-    #         logging.info("G Town!")
-    #         g_towns_list.append(town)
-    #
-    # logging.info("G towns list")
-    # for town in g_towns_list:
-    #     logging.info(town)
-    #     county = getCounty(town)
-    #     logging.info(county)
+    # Step through the list of towns in allTowns
+    for key, town in allTowns.items():
+        if town[4] == "N":
+            # add town to dictionary nTowns with key index
+            nTowns[key] = town
 
+    logging.info("***Dictionary of N towns")
+    logging.info(nTowns)
 
-# # For each town, find the 4th character in the string
-# printHeader("4th character in town name")
-# for town in (g_towns.values()):
-#     print(town[3])
+    PRINT_Data = []
+
+    PRINT_Data.append(CSV_HEADER)
+
+    for key, town in nTowns.items():
+        # Clean the data - extra , exists in Town
+        if town.find(",") != -1:
+            logging.info("There is a comma in the name")
+            posComma = town.find(",")
+            logging.info(f"The comma position is {posComma}")
+            logging.info(f"The corrected county name is {town[:posComma]}")
+            town = town[:posComma]
+
+        # Get the pop_value for each town
+        adjusted_key = (int(key) - 1) * 8
+        pop_value = values[adjusted_key]
+        males_value = values[adjusted_key + 1]
+        females_value = values[adjusted_key + 2]
+        ph_occ_value = values[adjusted_key + 3]
+        ph_unocc_value = values[adjusted_key + 4]
+        vac_dwell_value = values[adjusted_key + 5]
+        h_stock_value = values[adjusted_key + 6]
+        vac_rate_value = values[adjusted_key + 7]
+
+        PRINT_Data.append(
+            [
+                key,
+                town,
+                pop_value,
+                males_value,
+                females_value,
+                ph_occ_value,
+                ph_unocc_value,
+                vac_dwell_value,
+                h_stock_value,
+                vac_rate_value,
+            ]
+        )
+
+    # Now we need to print it out in a pretty fashion with columns
+    for row in PRINT_Data:
+        print("{: <10} {: <40} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15}".format(*row))
 
 # END function main()
 
