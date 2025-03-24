@@ -59,15 +59,9 @@ def getCounty(town: str):
     """
     posCounty: int = town.find("Co.")
     county = town[posCounty + 4:]
-    logging.info(f"Position of Co. in {town} is {posCounty},"
-                 f" county is {county}")
     if county.find(",") != -1:
-        logging.info("There is a comma in the county name")
         posComma = county.find(",")
-        logging.info(f"The comma position is {posComma}")
-        logging.info(f"The corrected county name is " f"{county[:posComma]}")
         county = county[:posComma]
-
     return county
 
 
@@ -81,8 +75,14 @@ def getTown(town: str):
     Given a string of Town data, return the town name
     """
     posCounty: int = town.find("Co.")
-    town = town[3:posCounty - 1]
+    town = town[3: posCounty - 1]
     return town
+
+
+# ============================================ #
+# //           townLetter Function          // #
+# ============================================ #
+
 
 def townLetter(theTowns, letter):
 
@@ -91,8 +91,13 @@ def townLetter(theTowns, letter):
     for key, town in theTowns.items():
         if town[4] == letter:
             townList[key] = town
-
     return townList
+
+
+# ============================================ #
+# //         countyLetter Function          // #
+# ============================================ #
+
 
 def countyLetter(theTowns, letter):
 
@@ -105,10 +110,15 @@ def countyLetter(theTowns, letter):
 
     return townlist
 
+
+# ============================================ #
+# //           buildData Function           // #
+# ============================================ #
+
+
 def buildData(smallTownList, valuesList):
     townData = []
 
-    print(f"The smallTownList is {smallTownList}")
     for key, town in smallTownList.items():
         if town.find(",") != -1:
             posComma = town.find(",")
@@ -142,6 +152,7 @@ def buildData(smallTownList, valuesList):
 
     return townData
 
+
 # -------------------------------------------- #
 # //               Main function            // #
 # -------------------------------------------- #
@@ -150,7 +161,7 @@ def buildData(smallTownList, valuesList):
 def main():
     """This is the main() function"""
     # Set the logging level to info
-    logging.basicConfig(level=logging.WARNING)
+    logging.basicConfig(level=logging.ERROR)
 
     # Pull the JSON data from the supplied URL
     with urllib.request.urlopen(
@@ -191,32 +202,14 @@ def main():
         value = value[0:3]
         lookup[value] = key
 
-    logging.info("Lookup List")
-    logging.info(lookup)
-
     # Extract a list of all values from $.dataset.value
     values = data["dataset"]["value"]
-    logging.info("List of all values")
-    logging.info(values)
-    logging.info(type(values))
 
     # make a list of all the towns
-    allTowns = {}
-
-    logging.info("Building list of all towns")
-
     allTowns = data["dataset"]["dimension"]["C03198V03862"]["category"]["label"]
-    logging.info("***List of all towns")
-    logging.info(type(allTowns))
-    logging.info(allTowns)
 
     # EXTRACT THE DATA FOR TOWNS STARTING WITH G
-    logging.info("Building dictionary of G towns")
-
     gTowns = townLetter(allTowns, "G")
-
-    logging.info("***Dictionary of G towns")
-    logging.info(gTowns)
 
     outputCSVData = []
     outputCSVData.append(CSV_HEADER)
@@ -226,11 +219,11 @@ def main():
     try:
         fh = open(LETTERG_CSV, mode="w", encoding="utf8")
     except PermissionError as e:
-        print(f"ERROR: Permission denied for file '{LETTERG_CSV}'.")
-        print(f"Logging: {e}")
+        logging.error(f"ERROR: Permission denied for file '{LETTERG_CSV}'.")
+        logging.error(f"Logging: {e}")
         sys.exit(1)
     except Exception as e:
-        print(f"ERROR: New un-excepted error.h")
+        logging.error(f"ERROR: New un-excepted error.h")
         raise OSError(e)
 
     csv_writer = csv.writer(fh,
@@ -245,19 +238,7 @@ def main():
     # Build a list of towns in counties that start with the letter K
 
     # Declare a dictionary called kTowns
-    kTowns = {}
-    logging.info("Building dictionary of K towns")
-
     kTowns = countyLetter(allTowns, "K")
-
-    # Step through the list of towns in allTowns
-    # for key, town in allTowns.items():
-    #     county = getCounty(town)
-    #     if county[0] == "K":
-    #         kTowns[key] = town
-
-    logging.info("***Dictionary of K towns")
-    logging.info(kTowns)
 
     outputCSVData = []
     outputCSVData.append(CSV_HEADER)
@@ -267,11 +248,11 @@ def main():
     try:
         fh = open(LETTERK_CSV, mode="w", encoding="utf8")
     except PermissionError as e:
-        print(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
-        print(f"Logging: {e}")
+        logging.error(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
+        logging.error(f"Logging: {e}")
         sys.exit(1)
     except Exception as e:
-        print(f"ERROR: New un-excepted error.h")
+        logging.error(f"ERROR: New un-excepted error.h")
         raise OSError(e)
 
     csv_writer = csv.writer(fh,
@@ -284,25 +265,14 @@ def main():
 
     # EXTRACT THE DATA FOR TOWNS STARTING WITH N
     # Declare a dictionary called nTowns
-    nTowns = {}
-    logging.info("Building dictionary of N towns")
-
     nTowns = townLetter(allTowns, "N")
 
-    logging.info("***Dictionary of N towns")
-    logging.info(nTowns)
-
     PRINT_Data = []
-
-    # PRINT_Data.append(CSV_HEADER)
 
     for key, town in nTowns.items():
         # Clean the data - extra , exists in Town
         if town.find(",") != -1:
-            logging.info("There is a comma in the name")
             posComma = town.find(",")
-            logging.info(f"The comma position is {posComma}")
-            logging.info(f"The corrected county name is {town[:posComma]}")
             town = town[:posComma]
 
         # Get the pop_value for each town
@@ -333,23 +303,41 @@ def main():
 
     # Now we need to print it out in a pretty fashion with columns
     # for row in PRINT_Data:
-    #     print("{: <10} {: <40} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15} {: >15}".format(*row))
+    #     print("{: <10} {: <40} {: >15} {: >15} {: >15} {: >15}
+    #              {: >15} {: >15} {: >15} {: >15}".format(*row))
 
     printHeader = [
-    "Code",
-    "Name",
-    "Population",
-    "Males",
-    "Females",
-    "Occupied",
-    "Unoccupied",
-    "Dwellings",
-    "Stock",
-    "Vacancy %",
-]
-    print(tabulate(PRINT_Data, printHeader, tablefmt="rounded_outline",
-                   colalign=("right","left","right", "right", "right",
-                             "right", "right", "right", "right", "right")))
+        "Code",
+        "Name",
+        "Population",
+        "Males",
+        "Females",
+        "Occupied",
+        "Unoccupied",
+        "Dwellings",
+        "Stock",
+        "Vacancy %",
+    ]
+    print(
+        tabulate(
+            PRINT_Data,
+            printHeader,
+            tablefmt="rounded_outline",
+            colalign=(
+                "right",
+                "left",
+                "right",
+                "right",
+                "right",
+                "right",
+                "right",
+                "right",
+                "right",
+                "right",
+            ),
+        )
+    )
+
 
 # END function main()
 
