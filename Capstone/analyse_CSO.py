@@ -56,6 +56,13 @@ def getCounty(town: str):
     Given a string of Town data, return the county name
     Also check to see if there is a comma in the county name,
     and discard from there to the end of the string
+
+    Arguments:
+        town (str): A string of Town data
+
+    Returns:
+        county (str): A string of the county name, with
+        the comma and any further text removed.
     """
     posCounty: int = town.find("Co.")
     county = town[posCounty + 4:]
@@ -70,13 +77,19 @@ def getCounty(town: str):
 # ============================================ #
 
 
-def getTown(town: str):
+def getTown(townData: str):
     """
     Given a string of Town data, return the town name
+
+    Arguments:
+        townData (str): A string of Town data
+
+    Returns:
+        townName (str): A string of the town name
     """
-    posCounty: int = town.find("Co.")
-    town = town[3: posCounty - 1]
-    return town
+    posCounty: int = townData.find("Co.")
+    townName: str = townData[3:posCounty - 1]
+    return townName
 
 
 # ============================================ #
@@ -84,7 +97,19 @@ def getTown(town: str):
 # ============================================ #
 
 
-def townLetter(theTowns, letter):
+def townLetter(theTowns: dict, letter: str):
+    """
+    Filters and returns towns whose names start with a specific letter.
+
+    Arguments:
+        theTowns (dict): Dictionary of towns with keys as town codes and
+                         values as town names.
+        letter (str): The letter to filter towns by.
+
+    Returns:
+        townList (dict): A dictionary of towns filtered by the specified
+                        starting letter.
+    """
 
     townList = {}
 
@@ -100,7 +125,18 @@ def townLetter(theTowns, letter):
 
 
 def countyLetter(theTowns, letter):
+    """
+    Filters and returns towns located in counties whose names start with a specific letter.
 
+    Arguments:
+        theTowns (dict): Dictionary of towns with keys as town codes and
+                         values as town and county names.
+        letter (str): The letter to filter counties by.
+
+    Returns:
+        townlist (dict): A dictionary of towns located in counties filtered
+                         by the specified starting letter.
+    """
     townlist = {}
 
     for key, town in theTowns.items():
@@ -117,6 +153,28 @@ def countyLetter(theTowns, letter):
 
 
 def buildData(smallTownList, valuesList):
+    """
+    Builds a list of town data entries with population and housing details.
+
+    Arguments:
+        smallTownList (dict): A dictionary containing town codes as keys and
+                              town names as values.
+        valuesList (list): A list of numerical data values corresponding to
+                           town-specific population and housing details.
+
+    Returns:
+        townData (list): A list of lists, where each sub-list contains:
+              - key: The town code.
+              - town: The town name (cleaned by removing any commas).
+              - pop_value Total population.
+              - males_value: Total male population.
+              - females_value: Total female population.
+              - ph_occ_value: Occupied private houses.
+              - ph_unocc_value: Unoccupied private houses.
+              - vac_dwell_value: Vacant dwellings.
+              - h_stock_value: Housing stock.
+              - vac_rate_value: Vacancy rate percentage.
+    """
     townData = []
 
     for key, town in smallTownList.items():
@@ -124,7 +182,7 @@ def buildData(smallTownList, valuesList):
             posComma = town.find(",")
             town = town[:posComma]
 
-        # Get the pop_value for each town
+        # Get the population and housing values for each town using adjusted indexing
         adjusted_key = (int(key) - 1) * 8
         pop_value = valuesList[adjusted_key]
         males_value = valuesList[adjusted_key + 1]
@@ -152,6 +210,37 @@ def buildData(smallTownList, valuesList):
 
     return townData
 
+# ============================================ #
+# //           writeCSV Function            // #
+# ============================================ #
+
+
+def writeCSV(csvFile, csvData):
+    """
+    Writes a list of data to a CSV file.
+
+    Arguments:
+        csvFile (str): The name of the CSV file to write to.
+        csvData (list): The CSV data to write.
+
+    Raises the following potential errors:
+        PermissionError: If the program does not have permission to write to the specified file.
+        OSError: For any other unexpected errors while opening or writing to the file.
+    """
+    try:
+        fh = open(csvFile, mode="w", encoding="utf8")
+    except PermissionError as e:
+        logging.error(f"ERROR: Permission denied for file '{csvFile}'.")
+        logging.error(f"Logging: {e}")
+        sys.exit(1)
+    except Exception as e:
+        logging.error(f"ERROR: New un-excepted error with file '{csvFile}'.")
+        raise OSError(e)
+
+    csv_writer = csv.writer(fh, delimiter=",", quotechar='"', quoting=csv.QUOTE_MINIMAL)
+    csv_writer.writerows(csvData)
+
+    fh.close()
 
 # -------------------------------------------- #
 # //               Main function            // #
@@ -215,56 +304,18 @@ def main():
     outputCSVData.append(CSV_HEADER)
     outputCSVData = outputCSVData + buildData(gTowns, values)
 
-    # Open the letterG.csv file
-    try:
-        fh = open(LETTERG_CSV, mode="w", encoding="utf8")
-    except PermissionError as e:
-        logging.error(f"ERROR: Permission denied for file '{LETTERG_CSV}'.")
-        logging.error(f"Logging: {e}")
-        sys.exit(1)
-    except Exception as e:
-        logging.error(f"ERROR: New un-excepted error.h")
-        raise OSError(e)
-
-    csv_writer = csv.writer(fh,
-                            delimiter=",",
-                            quotechar='"',
-                            quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(outputCSVData)
-
-    fh.close()
+    writeCSV(LETTERG_CSV, outputCSVData)
 
     # EXTRACT THE DATA FOR TOWNS IN COUNTIES STARTING WITH K
-    # Build a list of towns in counties that start with the letter K
-
-    # Declare a dictionary called kTowns
     kTowns = countyLetter(allTowns, "K")
 
     outputCSVData = []
     outputCSVData.append(CSV_HEADER)
     outputCSVData = outputCSVData + buildData(kTowns, values)
 
-    # Open the letterK.csv file
-    try:
-        fh = open(LETTERK_CSV, mode="w", encoding="utf8")
-    except PermissionError as e:
-        logging.error(f"ERROR: Permission denied for file '{LETTERK_CSV}'.")
-        logging.error(f"Logging: {e}")
-        sys.exit(1)
-    except Exception as e:
-        logging.error(f"ERROR: New un-excepted error.h")
-        raise OSError(e)
-
-    csv_writer = csv.writer(fh,
-                            delimiter=",",
-                            quotechar='"',
-                            quoting=csv.QUOTE_MINIMAL)
-    csv_writer.writerows(outputCSVData)
-
-    fh.close()
+    writeCSV(LETTERK_CSV, outputCSVData)
 
     # EXTRACT THE DATA FOR TOWNS STARTING WITH N
-    # Declare a dictionary called nTowns
     nTowns = townLetter(allTowns, "N")
 
     PRINT_Data = []
@@ -337,7 +388,6 @@ def main():
             ),
         )
     )
-
 
 # END function main()
 
