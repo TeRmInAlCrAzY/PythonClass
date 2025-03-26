@@ -3,9 +3,9 @@
 """
 Title: analyseCSO.py - analyse CSO data
 Author: Alan MacDonald
-Date: 04/03/2025
+Date: 21/03/2025
 
-This program demonstrates multiple aspets of the
+This program demonstrates multiple aspects of the
 course material
 
 Observations:
@@ -20,10 +20,11 @@ https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-p
 # ============================================ #
 
 import csv
-import urllib.request
 import json
-import sys
 import logging
+import sys
+import urllib.request
+
 from tabulate import tabulate
 
 # ============================================ #
@@ -253,6 +254,7 @@ def main():
     logging.basicConfig(level=logging.ERROR)
 
     # Pull the JSON data from the supplied URL
+    # https://stackoverflow.com/questions/12965203/how-to-get-json-from-webpage-into-python-script
     with urllib.request.urlopen(
         "https://ws.cso.ie/public/api.restful/PxStat.Data.Cube_API.ReadDataset/CD176/JSON-stat/1.0/en"
     ) as url:
