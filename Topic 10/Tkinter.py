@@ -20,19 +20,19 @@ Observations:
 # //             Module imports             // #
 # ============================================ #
 
-from tkinter import (
-    Tk,
-    Label,
-    Button,
-    Entry,
-    IntVar,
-    Radiobutton,
-    Checkbutton,
-    X,
-    Frame,
-    BOTH,
-)
 
+from tkinter import (
+    BOTH,
+    Button,
+    Checkbutton,
+    Entry,
+    Frame,
+    IntVar,
+    Label,
+    Tk,
+    Radiobutton,
+    X
+)
 # -------------------------------------------- #
 # //               Main function            // #
 # -------------------------------------------- #
@@ -49,6 +49,8 @@ class TkinterApp:
 
         # Set size of application window
         master.geometry("700x400")
+        # ------------------------------------------------------ #
+        Label(master, font=3, height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # Window label
