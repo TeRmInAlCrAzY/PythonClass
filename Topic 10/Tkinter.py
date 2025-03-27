@@ -32,7 +32,7 @@ class Tkinter_app:
         master.title("Tkinter in Python3")
 
         # Set size of application window
-        master.geometry("700x800")
+        master.geometry("700x400")
 
         # ------------------------------------------------------ #
         # Window label
@@ -53,15 +53,19 @@ class Tkinter_app:
         self.entry_box.insert(20, "Student name")
         self.entry_box.pack()
 
+        # Left align label frame.
+        self.enjoy_label_frame = Frame()
+        self.enjoy_label_frame.pack(fill=BOTH)
+
         # ------------------------------------------------------ #
         # Are you enjoying the course label
         self.label = Label(
-            master,
+            self.enjoy_label_frame,
             text="Are you enjoying this course?",
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack()
+        self.label.pack(side='left')
 
         # ------------------------------------------------------ #
         # Radio Buttons section
@@ -85,14 +89,22 @@ class Tkinter_app:
             self.rb.pack(side='left')
 
         # ------------------------------------------------------ #
+        Label(master, font=(3), height=0).pack(fill=X)
+
+        # ------------------------------------------------------ #
         # The sections most interesting to me are label
+
+        # Left align label frame.
+        self.interesting_label_frame = Frame()
+        self.interesting_label_frame.pack(fill=BOTH)
+
         self.label = Label(
-            master,
+            self.interesting_label_frame,
             text="The sections most interesting to me are:",
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack()
+        self.label.pack(side='left')
 
         # ------------------------------------------------------ #
         # Interest checkboxes section
@@ -121,17 +133,29 @@ class Tkinter_app:
             self.cb.pack(side='left')
 
         # ------------------------------------------------------ #
+        Label(master, font=(3), height=0).pack(fill=X)
+
+        # ------------------------------------------------------ #
         # Would you recommend this course to others label
+
+        # Left align label frame.
+        self.recommend_label_frame = Frame()
+        self.recommend_label_frame.pack(fill=BOTH)
+
         self.label = Label(
-            master,
+            self.recommend_label_frame,
             text="Would you recommend this course to others?",
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack()
+        self.label.pack(side='left')
 
         # ------------------------------------------------------ #
         # Recommendation Radio Buttons section
+
+        # Left align label frame.
+        self.rec_radio_label_frame = Frame()
+        self.rec_radio_label_frame.pack(fill=BOTH)
 
         self.rec_rb_choices = [("Yes", 1), ("No", 2)]
 
@@ -139,18 +163,23 @@ class Tkinter_app:
 
         for lang, val in self.rec_rb_choices:
             self.rb = Radiobutton(
-                master, text=lang, variable=self.rec_rb_var, value=val
+                self.rec_radio_label_frame, text=lang, variable=self.rec_rb_var, value=val
             )
-            self.rb.pack()
+            self.rb.pack(side='left')
 
         # ------------------------------------------------------ #
         Label(master, font=(3), height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # Additional comments text box
-        self.comments_entry_box = Entry(master)
+
+        # Left align label frame.
+        self.comments_label_frame = Frame()
+        self.comments_label_frame.pack(fill=BOTH)
+
+        self.comments_entry_box = Entry(self.comments_label_frame)
         self.comments_entry_box.insert(200, "Have you additional comments")
-        self.comments_entry_box.pack()
+        self.comments_entry_box.pack(side='left', fill=BOTH, expand=True)
 
         # ------------------------------------------------------ #
         # Submit Button
