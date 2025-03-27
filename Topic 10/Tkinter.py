@@ -15,7 +15,7 @@ Observations:
 # //             Module imports             // #
 # ============================================ #
 
-from tkinter import Tk, Label, Button, Entry, IntVar, Radiobutton, Checkbutton, X
+from tkinter import Tk, Label, Button, Entry, IntVar, Radiobutton, Checkbutton, X, Frame, BOTH
 
 # -------------------------------------------- #
 # //               Main function            // #
@@ -32,7 +32,7 @@ class Tkinter_app:
         master.title("Tkinter in Python3")
 
         # Set size of application window
-        master.geometry("1024x800")
+        master.geometry("700x800")
 
         # ------------------------------------------------------ #
         # Window label
@@ -61,10 +61,14 @@ class Tkinter_app:
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack(side='left')
+        self.label.pack()
 
         # ------------------------------------------------------ #
         # Radio Buttons section
+
+        # Radio buttons frame.
+        self.radio_buttons_frame = Frame()
+        self.radio_buttons_frame.pack(fill=BOTH)
 
         self.rb_choices = [
             ("It is very good", 1),
@@ -77,7 +81,7 @@ class Tkinter_app:
         self.rb_var = IntVar()
 
         for lang, val in self.rb_choices:
-            self.rb = Radiobutton(master, text=lang, variable=self.rb_var, value=val)
+            self.rb = Radiobutton(self.radio_buttons_frame, text=lang, variable=self.rb_var, value=val)
             self.rb.pack(side='left')
 
         # ------------------------------------------------------ #
@@ -92,6 +96,10 @@ class Tkinter_app:
 
         # ------------------------------------------------------ #
         # Interest checkboxes section
+
+        # Checkbox buttons frame.
+        self.checkbox_buttons_frame = Frame()
+        self.checkbox_buttons_frame.pack(fill=BOTH)
 
         self.cb_list = [
             "Basics",
@@ -109,8 +117,8 @@ class Tkinter_app:
 
         for row, value in enumerate(self.cb_list):
             self.cb_intvar.append(IntVar())
-            self.cb = Checkbutton(master, text=value, variable=self.cb_intvar[-1])
-            self.cb.pack()
+            self.cb = Checkbutton(self.checkbox_buttons_frame, text=value, variable=self.cb_intvar[-1])
+            self.cb.pack(side='left')
 
         # ------------------------------------------------------ #
         # Would you recommend this course to others label
