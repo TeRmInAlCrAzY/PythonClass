@@ -3,11 +3,16 @@
 """
 Title: Tkinter.py - Show a Tkinter GUI Dialog Box
 Author: Alan MacDonald
-Date: 26/03/2025
+Date: 27/03/2025
 
 This program demonstrates use of the Tkinter GUI library.
 
 Observations:
+    I relied on the following sources for information on left aligning
+    the controls, and setting the width of the text boxes:
+
+    https://stackoverflow.com/questions/73159989/align-radio-buttons-horizontally-in-python-using-tkinter?rq=3
+    https://python-list.python.narkive.com/iAJ6ZkR0/tkinter-text-width
 
 """
 
@@ -15,14 +20,25 @@ Observations:
 # //             Module imports             // #
 # ============================================ #
 
-from tkinter import Tk, Label, Button, Entry, IntVar, Radiobutton, Checkbutton, X, Frame, BOTH
+from tkinter import (
+    Tk,
+    Label,
+    Button,
+    Entry,
+    IntVar,
+    Radiobutton,
+    Checkbutton,
+    X,
+    Frame,
+    BOTH,
+)
 
 # -------------------------------------------- #
 # //               Main function            // #
 # -------------------------------------------- #
 
 
-class Tkinter_app:
+class TkinterApp:
     """
     This is the main GUI class.
     """
@@ -45,7 +61,7 @@ class Tkinter_app:
         self.label.pack()
 
         # ------------------------------------------------------ #
-        Label(master, font=(3), height=0).pack(fill=X)
+        Label(master, font=3, height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # Student Name text box
@@ -65,7 +81,7 @@ class Tkinter_app:
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack(side='left')
+        self.label.pack(side="left")
 
         # ------------------------------------------------------ #
         # Radio Buttons section
@@ -85,11 +101,16 @@ class Tkinter_app:
         self.rb_var = IntVar()
 
         for lang, val in self.rb_choices:
-            self.rb = Radiobutton(self.radio_buttons_frame, text=lang, variable=self.rb_var, value=val)
-            self.rb.pack(side='left')
+            self.rb = Radiobutton(
+                self.radio_buttons_frame,
+                text=lang,
+                variable=self.rb_var,
+                value=val
+            )
+            self.rb.pack(side="left")
 
         # ------------------------------------------------------ #
-        Label(master, font=(3), height=0).pack(fill=X)
+        Label(master, font=3, height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # The sections most interesting to me are label
@@ -104,7 +125,7 @@ class Tkinter_app:
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack(side='left')
+        self.label.pack(side="left")
 
         # ------------------------------------------------------ #
         # Interest checkboxes section
@@ -125,15 +146,19 @@ class Tkinter_app:
             "Web",
         ]
 
-        self.cb_intvar = []
+        self.cb_IntVar = []
 
         for row, value in enumerate(self.cb_list):
-            self.cb_intvar.append(IntVar())
-            self.cb = Checkbutton(self.checkbox_buttons_frame, text=value, variable=self.cb_intvar[-1])
-            self.cb.pack(side='left')
+            self.cb_IntVar.append(IntVar())
+            self.cb = Checkbutton(
+                self.checkbox_buttons_frame,
+                text=value,
+                variable=self.cb_IntVar[-1]
+            )
+            self.cb.pack(side="left")
 
         # ------------------------------------------------------ #
-        Label(master, font=(3), height=0).pack(fill=X)
+        Label(master, font=3, height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # Would you recommend this course to others label
@@ -148,7 +173,7 @@ class Tkinter_app:
             font="Helvetica 12 bold",
             justify="left",
         )
-        self.label.pack(side='left')
+        self.label.pack(side="left")
 
         # ------------------------------------------------------ #
         # Recommendation Radio Buttons section
@@ -163,12 +188,15 @@ class Tkinter_app:
 
         for lang, val in self.rec_rb_choices:
             self.rb = Radiobutton(
-                self.rec_radio_label_frame, text=lang, variable=self.rec_rb_var, value=val
+                self.rec_radio_label_frame,
+                text=lang,
+                variable=self.rec_rb_var,
+                value=val,
             )
-            self.rb.pack(side='left')
+            self.rb.pack(side="left")
 
         # ------------------------------------------------------ #
-        Label(master, font=(3), height=0).pack(fill=X)
+        Label(master, font=3, height=0).pack(fill=X)
 
         # ------------------------------------------------------ #
         # Additional comments text box
@@ -179,7 +207,7 @@ class Tkinter_app:
 
         self.comments_entry_box = Entry(self.comments_label_frame)
         self.comments_entry_box.insert(200, "Have you additional comments")
-        self.comments_entry_box.pack(side='left', fill=BOTH, expand=True)
+        self.comments_entry_box.pack(side="left", fill=BOTH, expand=True)
 
         # ------------------------------------------------------ #
         # Submit Button
@@ -215,7 +243,7 @@ class Tkinter_app:
 
     def cb_print_choice(self):
         choice_list = []
-        for count, var in enumerate(self.cb_intvar):
+        for count, var in enumerate(self.cb_IntVar):
             if var.get():
                 choice_list.append(self.cb_list[count])
         print(f"Sections of interest   : {choice_list}")
@@ -245,7 +273,7 @@ class Tkinter_app:
 # Call main function
 if __name__ == "__main__":
     tk = Tk()
-    Tkinter_app(tk)
+    TkinterApp(tk)
     tk.mainloop()
 
 # END
